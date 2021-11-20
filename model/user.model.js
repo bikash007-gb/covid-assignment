@@ -3,12 +3,14 @@ const mongoose = require("mongoose")
 const UserSchema = new mongoose.Schema({
     adharCardNumber: {
         type: String,
-        required: [true, "Please add a adhar card number"],
+        required: [true, "Please enter the Adhar card number"],
         unique: true,
+        maxlength: 12,
+        minlength: 12,
     },
     ipAddress: {
         type: String,
-        required: [true, "Please add a adhar card number"],
+        required: true,
     },
     location: {
         type: String,

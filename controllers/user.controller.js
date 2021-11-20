@@ -1,7 +1,6 @@
 const User = require("../model/user.model")
 const asyncHandler = require("../middlewares/asyncHandler.middleware")
 const ErrorResponse = require("../utils/errorResponse.util")
-const CommonUtils = require("../utils/common")
 
 /**
  * @description user entry in database
@@ -19,10 +18,10 @@ exports.userEntry = asyncHandler(async (req, res, next) => {
 /**
  * @description get vaccination report
  * @route GEt /user/:from/:to
- * @params {from} start date    {to} end date-----> Mandatory
+ * @PathParams {from} start date    {to} end date-----> Mandatory
  * @QueryString {location} state   {filter} grouping reports by daily,weekly,monthly,yearly------> Optional
  */
-exports.getUsers = asyncHandler(async (req, res, next) => {
+exports.geReport = asyncHandler(async (req, res, next) => {
     const from = req.params.from
     const to = req.params.to
 
@@ -40,7 +39,7 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
     }
 
     //using aggregate pipeline to calculate data
-    const users = await User.aggregate([
+    const report = await User.aggregate([
         {
             $match: condition,
         },
@@ -53,13 +52,13 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
         },
     ])
 
-    if (users.length === 0) {
-        return next(new ErrorResponse("No users found", 404))
+    if (report.length === 0) {
+        return next(new ErrorResponse("No user found", 404))
     }
 
     res.status(200).json({
         success: true,
-        data: users,
+        data: report,
     })
 })
 
